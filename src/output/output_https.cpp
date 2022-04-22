@@ -1,6 +1,11 @@
 #include "output_https.h"
 #include <mist/procs.h>
 
+static int f_rng(void *, unsigned char *, size_t)
+{
+    return 0;
+}
+
 namespace Mist{
   mbedtls_entropy_context OutHTTPS::entropy;
   mbedtls_ctr_drbg_context OutHTTPS::ctr_drbg;
@@ -239,7 +244,7 @@ namespace Mist{
     }
 
     // Read key from cmdline option
-    ret = mbedtls_pk_parse_keyfile(&pkey, config->getString("key").c_str(), 0);
+    ret = mbedtls_pk_parse_keyfile(&pkey, config->getString("key").c_str(), 0, f_rng, 0);
     if (ret != 0){
       FAIL_MSG("Could not load any keys from file: %s", config->getString("key").c_str());
       return;

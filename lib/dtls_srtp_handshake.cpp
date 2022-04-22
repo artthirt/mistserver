@@ -33,8 +33,8 @@ int DTLSSRTPHandshake::init(mbedtls_x509_crt *certificate, mbedtls_pk_context *p
                             int (*writeCallback)(const uint8_t *data, int *nbytes)){
 
   int r = 0;
-  mbedtls_ssl_srtp_profile srtp_profiles[] ={MBEDTLS_SRTP_AES128_CM_HMAC_SHA1_80,
-                                              MBEDTLS_SRTP_AES128_CM_HMAC_SHA1_32};
+  mbedtls_ssl_srtp_profile srtp_profiles[] ={MBEDTLS_TLS_SRTP_AES128_CM_HMAC_SHA1_80,
+                                              MBEDTLS_TLS_SRTP_AES128_CM_HMAC_SHA1_32, 0};
 
   if (!writeCallback){
     FAIL_MSG("No writeCallack function given.");
@@ -90,8 +90,8 @@ int DTLSSRTPHandshake::init(mbedtls_x509_crt *certificate, mbedtls_pk_context *p
   mbedtls_debug_set_threshold(10);
 
   /* enable SRTP */
-  r = mbedtls_ssl_conf_dtls_srtp_protection_profiles(&ssl_conf, srtp_profiles,
-                                                     sizeof(srtp_profiles) / sizeof(srtp_profiles[0]));
+  r = mbedtls_ssl_conf_dtls_srtp_protection_profiles(&ssl_conf, srtp_profiles/*,
+                                                     sizeof(srtp_profiles) / sizeof(srtp_profiles[0])*/);
   if (0 != r){
     print_mbedtls_error(r);
     r = -40;
@@ -188,7 +188,7 @@ int DTLSSRTPHandshake::parse(const uint8_t *data, size_t nbytes){
     return -2;
   }
 
-  if (MBEDTLS_SSL_HANDSHAKE_OVER == ssl_ctx.state){
+  if (MBEDTLS_SSL_HANDSHAKE_OVER == ssl_ctx.private_state){
     ERROR_MSG("Already finished the handshake.");
     return -3;
   }
@@ -266,8 +266,9 @@ int DTLSSRTPHandshake::resetSession(){
 */
 int DTLSSRTPHandshake::extractKeyingMaterial(){
 
+#if 0
   int r = 0;
-  uint8_t keying_material[MBEDTLS_DTLS_SRTP_MAX_KEY_MATERIAL_LENGTH] ={};
+  uint8_t keying_material[MBEDTLS_TLS_SRTP_MAX_KEY_MATERIAL_LENGTH] ={};
   size_t keying_material_len = sizeof(keying_material);
 
   r = mbedtls_ssl_get_dtls_srtp_key_material(&ssl_ctx, keying_material, &keying_material_len);
@@ -303,8 +304,9 @@ int DTLSSRTPHandshake::extractKeyingMaterial(){
   DONTEVEN_MSG("Remote DTLS SRTP salt size is %zu.", remote_salt.size());
   DONTEVEN_MSG("Local DTLS SRTP key size is %zu.", local_key.size());
   DONTEVEN_MSG("Local DTLS SRTP salt size is %zu.", local_salt.size());
-
+#endif
   return 0;
+
 }
 
 /* ----------------------------------------- */

@@ -11,6 +11,10 @@ endif(COMMAND cmake_policy)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++98")
 
+include_directories(/home/user/develop/mbedtls-install/include)
+link_directories(/home/user/develop/mbedtls-install/lib)
+add_definitions(-DMBEDTLS_SSL_DTLS_SRTP)
+
 SET(SOURCE_DIR ${PROJECT_SOURCE_DIR})
 SET(BINARY_DIR ${PROJECT_BINARY_DIR})
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON ) #For YCM support

@@ -212,10 +212,15 @@ bool Certificate::loadCert(const std::string & certFile){
   return mbedtls_x509_crt_parse_file(&cert, certFile.c_str()) == 0;
 }
 
+static int f_rng(void *, unsigned char *, size_t)
+{
+    return 0;
+}
+
 /// Loads a single key. Returns true on success.
 bool Certificate::loadKey(const std::string & keyFile){
   if (!keyFile.size()){return true;}
-  return  mbedtls_pk_parse_keyfile(&key, keyFile.c_str(), 0) == 0;
+  return  mbedtls_pk_parse_keyfile(&key, keyFile.c_str(), 0, f_rng, 0) == 0;
 }
 
 /// Calculates SHA256 fingerprint over the loaded certificate(s)
