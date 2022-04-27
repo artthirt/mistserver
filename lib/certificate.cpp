@@ -220,7 +220,11 @@ static int f_rng(void *, unsigned char *, size_t)
 /// Loads a single key. Returns true on success.
 bool Certificate::loadKey(const std::string & keyFile){
   if (!keyFile.size()){return true;}
+#if defined(MBEDTLS_PRIVATE)
   return  mbedtls_pk_parse_keyfile(&key, keyFile.c_str(), 0, f_rng, 0) == 0;
+#else
+  return  mbedtls_pk_parse_keyfile(&key, keyFile.c_str(), 0) == 0;
+#endif
 }
 
 /// Calculates SHA256 fingerprint over the loaded certificate(s)

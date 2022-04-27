@@ -188,10 +188,17 @@ int DTLSSRTPHandshake::parse(const uint8_t *data, size_t nbytes){
     return -2;
   }
 
+#if defined(MBEDTLS_PRIVATE)
   if (MBEDTLS_SSL_HANDSHAKE_OVER == ssl_ctx.private_state){
     ERROR_MSG("Already finished the handshake.");
     return -3;
   }
+#else
+  if (MBEDTLS_SSL_HANDSHAKE_OVER == ssl_ctx.state){
+    ERROR_MSG("Already finished the handshake.");
+    return -3;
+  }
+#endif
 
   /* copy incoming data into a temporary buffer which is read via our `bio` read function. */
   int r = 0;
