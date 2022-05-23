@@ -41,6 +41,8 @@ endif()
 ########################################
 if (RELEASE)
   set (RELEASE_RAW ${RELEASE})
+  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
 else()
 #get the bitlength of this system
   execute_process(COMMAND getconf LONG_BIT OUTPUT_VARIABLE RELEASE_RAW )
