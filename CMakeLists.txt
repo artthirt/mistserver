@@ -11,8 +11,11 @@ endif(COMMAND cmake_policy)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++98")
 
-include_directories(/home/user/develop/mbedtls-install/include)
-link_directories(/home/user/develop/mbedtls-install/lib)
+# need custom build mbedtls for ubuntu 20.04
+find_package(MbedTLS)
+
+#include_directories(/home/user/develop/mbedtls-install/include)
+#link_directories(/home/user/develop/mbedtls-install/lib)
 add_definitions(-DMBEDTLS_SSL_DTLS_SRTP)
 
 SET(SOURCE_DIR ${PROJECT_SOURCE_DIR})
@@ -320,7 +323,11 @@ target_link_libraries(mist
   ${LIBRT}
 )
 if (NOT NOSSL)
-  target_link_libraries(mist mbedtls mbedx509 mbedcrypto srtp2)
+    if(MbedTLS_FOUND)
+        target_link_libraries(mist MbedTLS::mbedtls srtp2)
+    else()
+        target_link_libraries(mist mbedtls mbedx509 mbedcrypto srtp2)
+    endif()
 endif()
 install(
   FILES ${libHeaders}
