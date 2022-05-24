@@ -14,6 +14,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++98")
 # need custom build mbedtls for ubuntu 20.04
 find_package(MbedTLS)
 
+if(MbedTLS_FOUND)
+  include_directories(MbedTLS::mbedtls)
+endif()
+
+message("--> MbedTLS found: ${MbedTLS_FOUND}")
+
 #include_directories(/home/user/develop/mbedtls-install/include)
 #link_directories(/home/user/develop/mbedtls-install/lib)
 add_definitions(-DMBEDTLS_SSL_DTLS_SRTP)
@@ -25,6 +31,7 @@ include_directories(${SOURCE_DIR})
 include_directories(${BINARY_DIR} ${BINARY_DIR}/generated)
 
 option(BUILD_SHARED_LIBS "Build the libraries as shared (default = static)")
+option(ENABLE_TESTING "Enable testing" OFF)
 
 ########################################
 # Testing - Enable Tests               #
@@ -885,31 +892,33 @@ add_custom_target(clean-all
   COMMAND rm -rf ${BINARY_DIR}/mist
 )
 
+if(ENABLE_TESTING)
 ########################################
 # Tests                                #
 ########################################
-add_executable(urltest test/url.cpp ${BINARY_DIR}/mist/.headers)
-target_link_libraries(urltest mist)
-add_test(URLTest COMMAND urltest)
-add_executable(logtest test/log.cpp ${BINARY_DIR}/mist/.headers)
-target_link_libraries(logtest mist)
-add_test(LOGTest COMMAND logtest)
-add_executable(downloadertest test/downloader.cpp ${BINARY_DIR}/mist/.headers)
-target_link_libraries(downloadertest mist)
-add_test(DownloaderTest COMMAND downloadertest)
-add_executable(urireadertest test/urireader.cpp ${BINARY_DIR}/mist/.headers)
-target_link_libraries(urireadertest mist)
-add_test(URIReaderTest COMMAND urireadertest)
-add_executable(jsontest test/json.cpp ${BINARY_DIR}/mist/.headers)
-target_link_libraries(jsontest mist)
-add_test(JSONTest COMMAND jsontest)
-add_executable(resolvetest test/resolve.cpp ${BINARY_DIR}/mist/.headers)
-target_link_libraries(resolvetest mist)
-add_executable(bitwritertest test/bitwriter.cpp ${BINARY_DIR}/mist/.headers)
-target_link_libraries(bitwritertest mist)
-add_test(BitWriterTest COMMAND bitwritertest)
-add_executable(streamstatustest test/status.cpp ${BINARY_DIR}/mist/.headers)
-target_link_libraries(streamstatustest mist)
-add_executable(websockettest test/websocket.cpp ${BINARY_DIR}/mist/.headers)
-target_link_libraries(websockettest mist)
+  add_executable(urltest test/url.cpp ${BINARY_DIR}/mist/.headers)
+  target_link_libraries(urltest mist)
+  add_test(URLTest COMMAND urltest)
+  add_executable(logtest test/log.cpp ${BINARY_DIR}/mist/.headers)
+  target_link_libraries(logtest mist)
+  add_test(LOGTest COMMAND logtest)
+  add_executable(downloadertest test/downloader.cpp ${BINARY_DIR}/mist/.headers)
+  target_link_libraries(downloadertest mist)
+  add_test(DownloaderTest COMMAND downloadertest)
+  add_executable(urireadertest test/urireader.cpp ${BINARY_DIR}/mist/.headers)
+  target_link_libraries(urireadertest mist)
+  add_test(URIReaderTest COMMAND urireadertest)
+  add_executable(jsontest test/json.cpp ${BINARY_DIR}/mist/.headers)
+  target_link_libraries(jsontest mist)
+  add_test(JSONTest COMMAND jsontest)
+  add_executable(resolvetest test/resolve.cpp ${BINARY_DIR}/mist/.headers)
+  target_link_libraries(resolvetest mist)
+  add_executable(bitwritertest test/bitwriter.cpp ${BINARY_DIR}/mist/.headers)
+  target_link_libraries(bitwritertest mist)
+  add_test(BitWriterTest COMMAND bitwritertest)
+  add_executable(streamstatustest test/status.cpp ${BINARY_DIR}/mist/.headers)
+  target_link_libraries(streamstatustest mist)
+  add_executable(websockettest test/websocket.cpp ${BINARY_DIR}/mist/.headers)
+  target_link_libraries(websockettest mist)
 
+endif()
