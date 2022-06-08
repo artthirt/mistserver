@@ -34,7 +34,7 @@ int DTLSSRTPHandshake::init(mbedtls_x509_crt *certificate, mbedtls_pk_context *p
 
   int r = 0;
   mbedtls_ssl_srtp_profile srtp_profiles[] ={MBEDTLS_TLS_SRTP_AES128_CM_HMAC_SHA1_80,
-                                              MBEDTLS_TLS_SRTP_AES128_CM_HMAC_SHA1_32, 0};
+                                              MBEDTLS_TLS_SRTP_AES128_CM_HMAC_SHA1_32, MBEDTLS_TLS_SRTP_UNSET};
 
   if (!writeCallback){
     FAIL_MSG("No writeCallack function given.");
