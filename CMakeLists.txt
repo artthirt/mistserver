@@ -35,6 +35,11 @@ endif()
 ########################################
 # Build Variables - Release            #
 ########################################
+if(CMAKE_BUILD_TYPE STREQUAL Release)
+    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
+endif()
+
 if (RELEASE)
   set (RELEASE_RAW ${RELEASE})
 else()
